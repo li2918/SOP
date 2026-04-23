@@ -37,8 +37,25 @@ jobs:
       - name: Install dependencies
         run: npm ci || npm install
 
+      - name: Verify STATICRYPT_PASSWORD secret is set
+        env:
+          STATICRYPT_PASSWORD: ${{ secrets.STATICRYPT_PASSWORD }}
+        run: |
+          if [ -z "$STATICRYPT_PASSWORD" ]; then
+            echo "::error::未设置 STATICRYPT_PASSWORD secret。请在 Settings → Secrets and variables → Actions → New repository secret 中添加，名称为 STATICRYPT_PASSWORD。"
+            exit 1
+          fi
+          if [ ${#STATICRYPT_PASSWORD} -lt 10 ]; then
+            echo "::warning::STATICRYPT_PASSWORD 长度不足 10 位，建议至少 14 位混合字符。"
+          fi
+
       - name: Build with VitePress
         run: npm run build
+
+      - name: Encrypt HTML with StatiCrypt
+        env:
+          STATICRYPT_PASSWORD: ${{ secrets.STATICRYPT_PASSWORD }}
+        run: npm run encrypt
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
