@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>售后退款流程 · 运营 SOP</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="container">
+
+  <a href="../index.html" class="back-link">← 返回目录</a>
+
+  <main>
+    <article>
+
+      <h1>售后退款流程（示例）</h1>
+
+      <div class="meta">
+        <span>版本：v1.0</span>
+        <span>生效日期：2026-01-01</span>
+        <span>负责部门：客户服务部</span>
+        <span>文档 Owner：张三</span>
+      </div>
+
+      <div class="note tip">
+        这是一份<strong>示例 SOP</strong>，展示了标准页面的结构和样式。正式内容由运营同事填入。
+      </div>
+
+      <h2>适用场景</h2>
+      <p>
+        客户对已付款订单申请退款时适用。不适用于：订单超过 30 天、促销活动"不退不换"商品。
+      </p>
+
+      <h2>角色与分工</h2>
+      <ul>
+        <li><strong>客服专员</strong>：接单、初步判断是否符合退款政策</li>
+        <li><strong>客服主管</strong>：审核 500 元及以上退款申请</li>
+        <li><strong>财务专员</strong>：核实并打款</li>
+      </ul>
+
+      <h2>操作步骤</h2>
+      <ol>
+        <li>
+          <strong>客户发起退款</strong>
+          <p>通过 400 电话或在线工单系统提交退款申请，填写订单号、退款原因。</p>
+        </li>
+        <li>
+          <strong>客服专员初审</strong>
+          <ul>
+            <li>登录工单系统查看订单状态</li>
+            <li>对照退款政策判断是否符合（见附件）</li>
+            <li>若明显不符，填写拒绝原因并回复客户</li>
+          </ul>
+        </li>
+        <li>
+          <strong>主管审批（仅 ≥500 元）</strong>
+          <p>主管在 2 小时内审批；超时自动升级到运营总监。</p>
+        </li>
+        <li>
+          <strong>财务打款</strong>
+          <p>3 个工作日内通过原支付渠道退回。原渠道失效时转账到客户提供账户，留存凭证。</p>
+        </li>
+        <li>
+          <strong>回访确认</strong>
+          <p>打款后第 5 天客服回访确认款项到账，关闭工单。</p>
+        </li>
+      </ol>
+
+      <h2>异常处理</h2>
+      <table>
+        <thead>
+          <tr><th>异常情形</th><th>处理方式</th><th>对接人</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>超过 30 天</td>
+            <td>走特批流程，需客服主管 + 运营总监双签</td>
+            <td>客服主管</td>
+          </tr>
+          <tr>
+            <td>原支付渠道失效</td>
+            <td>改走银行转账，留存客户身份证复印件和到账凭证</td>
+            <td>财务</td>
+          </tr>
+          <tr>
+            <td>客户投诉升级</td>
+            <td>12 小时内升级到运营总监，48 小时内正式答复</td>
+            <td>运营总监</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="note warning">
+        <strong>注意：</strong>任何退款操作完成后，必须在工单系统填写处理摘要，否则考核扣分。
+      </div>
+
+      <h2>关联附件</h2>
+      <div class="attachments">
+        <p>原始文件可点击下载：</p>
+        <ul>
+          <li><a href="../files/refund-policy-v3.2.docx">退款政策 v3.2（Word，示例）</a></li>
+          <li><a href="../files/refund-account-form.xlsx">客户账户信息登记表（Excel，示例）</a></li>
+        </ul>
+        <p style="font-size:12px; color:#656d76; margin:8px 0 0;">
+          附件实际文件请运营维护者上传到仓库 <code>files/</code> 目录。
+        </p>
+      </div>
+
+      <h2>流程图</h2>
+      <p style="color:#656d76; font-size:14px;">
+        图片放在仓库 <code>assets/</code> 下，用相对路径引用：
+      </p>
+      <p><code>&lt;img src="../assets/refund-flow.png" alt="退款流程图"&gt;</code></p>
+
+      <h2>更新记录</h2>
+      <table>
+        <thead>
+          <tr><th>日期</th><th>修改人</th><th>修改内容</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>2026-01-01</td><td>张三</td><td>初版发布</td></tr>
+        </tbody>
+      </table>
+
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    内部知识库 · 仅供公司内部使用
+  </footer>
+
+</div>
+</body>
+</html>

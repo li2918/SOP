@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>运营 SOP 知识库</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+  <header class="site-header">
+    <h1>运营 SOP 知识库</h1>
+    <p class="tagline">公司运营标准作业流程（SOP）统一查询平台</p>
+  </header>
+
+  <input type="text" id="search" class="search-box" placeholder="🔍 输入关键词查找 SOP（如「退款」「入职」）">
+
+  <!--
+    目录结构说明（新增 SOP 时照此维护）：
+    - 每个业务线一个 <section class="category">
+    - 每条 SOP 一个 <li>，data-keywords 里放搜索关键词（中文逗号或空格分隔均可）
+    - SOP 页面文件放在 pages/ 目录下
+  -->
+
+  <section class="category" data-name="客户服务">
+    <h2>客户服务</h2>
+    <ul>
+      <li data-keywords="退款 退货 售后 refund">
+        <a href="pages/example-sop.html">示例：售后退款流程</a>
+        <span class="desc">— 客户发起退款 → 审核 → 财务打款</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="category" data-name="销售流程">
+    <h2>销售流程</h2>
+    <ul>
+      <!-- 例： <li data-keywords="线索 跟进"><a href="pages/lead-followup.html">线索跟进 SOP</a></li> -->
+    </ul>
+  </section>
+
+  <section class="category" data-name="市场营销">
+    <h2>市场营销</h2>
+    <ul>
+    </ul>
+  </section>
+
+  <section class="category" data-name="产品运营">
+    <h2>产品运营</h2>
+    <ul>
+    </ul>
+  </section>
+
+  <section class="category" data-name="财务流程">
+    <h2>财务流程</h2>
+    <ul>
+    </ul>
+  </section>
+
+  <section class="category" data-name="人事行政">
+    <h2>人事行政</h2>
+    <ul>
+    </ul>
+  </section>
+
+  <section class="category" data-name="新人培训">
+    <h2>新人培训</h2>
+    <ul>
+    </ul>
+  </section>
+
+  <p id="no-results" style="display:none; color:#656d76; text-align:center; margin-top:40px;">
+    未找到匹配的 SOP，请尝试其他关键词。
+  </p>
+
+  <footer class="site-footer">
+    内部知识库 · 仅供公司内部使用
+  </footer>
+
+</div>
+
+<script>
+  // 极简搜索：按标题+关键词过滤
+  (function () {
+    const input = document.getElementById('search');
+    const categories = document.querySelectorAll('section.category');
+    const noResults = document.getElementById('no-results');
+
+    function matches(li, q) {
+      const text = (li.textContent + ' ' + (li.dataset.keywords || '')).toLowerCase();
+      return text.indexOf(q) !== -1;
+    }
+
+    input.addEventListener('input', function () {
+      const q = input.value.trim().toLowerCase();
+      let total = 0;
+      categories.forEach(function (cat) {
+        const items = cat.querySelectorAll('ul > li');
+        let visible = 0;
+        items.forEach(function (li) {
+          const show = !q || matches(li, q);
+          li.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+        cat.classList.toggle('empty', visible === 0);
+        total += visible;
+      });
+      noResults.style.display = (q && total === 0) ? 'block' : 'none';
+    });
+  })();
+</script>
+
+</body>
+</html>

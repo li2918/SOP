@@ -1,142 +1,141 @@
 # 运营 SOP 知识库
 
-基于 [VitePress](https://vitepress.dev/) 搭建的内部标准作业流程（SOP）查询平台，**使用 StatiCrypt 端到端密码加密**。
+一个纯静态网站，每个 SOP 对应一个 HTML 页面。**不需要 Node.js、不需要任何构建工具**。您在编辑器里直接改 HTML，push 即上线。
 
-- 🔐 部署的 HTML 用 AES-256 加密，访客需输入共享密码后方可查看
-- 📚 所有 SOP 用 Markdown 维护，版本随 Git 追溯
-- 🔍 内置中文全文搜索
-- 📎 支持 Word / PDF / Excel / 图片 作为附件下载
-- 🚀 推送到 `main` 分支自动部署到 GitHub Pages
+- 🗂️ `index.html` — 目录页（含按关键词搜索）
+- 📄 `pages/` — 每个 SOP 一个 HTML 文件
+- 🎨 `style.css` — 所有页面共享的样式
+- 🖼️ `assets/` — 图片、截图
+- 📎 `files/` — 原始 Word / PDF / Excel 附件
 
-## ⚠️ 必读：安全配置清单
-
-本站有两道安全防线，**两道都要做好，缺一不可**：
-
-### 第 1 道：仓库必须设为 Private（保护源 Markdown）
-
-登录 GitHub → 打开 `https://github.com/li2918/SOP/settings` → 滚到底部 `Danger Zone` → `Change visibility` → **Make private**。
-
-> 不做这一步，竞争对手直接到仓库里就能读原始 Markdown 文件——网站加再多密码也没用。
-
-免费版 GitHub 账号在私有仓库上依然能部署 GitHub Pages，但如果没有 GitHub Pro / Team，Pages 会有一些限制。需要确认账号套餐支持 Pages on Private Repos（Pro 起支持，每月约 $4）。如果不能升级，见下文"备选方案"。
-
-### 第 2 道：设置访问密码（保护部署的 HTML）
-
-1. 打开 `https://github.com/li2918/SOP/settings/secrets/actions`
-2. 点击 **New repository secret**
-3. 名称：`STATICRYPT_PASSWORD`
-4. 值：**至少 14 位**的强密码（建议 字母+数字+符号 混合，例如 `Op2026!SOP-Internal-Access`）
-5. 保存
-
-> 每次改密码只需回到这里更新 secret 的值，然后重新跑一次 Actions 工作流即可。
-
-### 密码轮换建议
-
-- 每季度轮换一次
-- 有员工离职后立即轮换
-- 全员通过企微/钉钉群公告新密码
-
-## 本地开发
-
-### 前置要求
-
-- [Node.js](https://nodejs.org/) >= 18
-
-### 启动开发服务器（不加密）
-
-```bash
-npm install
-npm run dev
-```
-
-打开浏览器访问 <http://localhost:5173/SOP/> 即可。开发时无需密码，方便编辑。
-
-### 本地预览加密后的效果
-
-```bash
-# Windows PowerShell
-$env:STATICRYPT_PASSWORD="test-password"; npm run build:secure; npm run preview
-
-# macOS / Linux
-STATICRYPT_PASSWORD=test-password npm run build:secure && npm run preview
-```
-
-访问 <http://localhost:4173/SOP/> 会出现密码输入页，输入上面设置的密码即可进入。
-
-## 部署到 GitHub Pages
-
-### 一次性配置
-
-1. ✅ 已推送仓库到 `https://github.com/li2918/SOP.git`
-2. **把仓库设为 Private**（上文「第 1 道」）
-3. **添加 `STATICRYPT_PASSWORD` Secret**（上文「第 2 道」）
-4. 在仓库 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**
-5. 根据实际仓库名检查 [docs/.vitepress/config.mts](docs/.vitepress/config.mts) 中的 `base` 字段：
-   - 若仓库叫 `SOP`，保持 `base: '/SOP/'`
-   - 若是用户/组织主页（`<user>.github.io`），改为 `base: '/'`
-   - 若使用自定义域名，改为 `base: '/'` 并在 `docs/public/` 下新建 `CNAME` 文件写入域名
-
-完成 1–5 后，访问 **<https://li2918.github.io/SOP/>** 会出现密码输入页。
-
-### 日常发布
-
-每次向 `main` 分支 push，GitHub Actions 会自动：
-
-1. 安装依赖
-2. 检查 `STATICRYPT_PASSWORD` secret 是否配置
-3. 运行 `vitepress build`
-4. 用 StatiCrypt 对所有 HTML 做 AES-256 加密
-5. 把加密后的静态文件发布到 GitHub Pages
-
-约 1–2 分钟后生效。工作流日志在 `https://github.com/li2918/SOP/actions` 查看。
-
-## 目录结构
+## 文件结构
 
 ```
 SOP/
-├── .github/workflows/deploy.yml     GitHub Actions 自动部署 + 加密
-├── scripts/encrypt.mjs              StatiCrypt 加密脚本（跨平台）
-├── docs/
-│   ├── .vitepress/config.mts        站点配置（导航、侧边栏、搜索）
-│   ├── index.md                     首页
-│   ├── guide/                       使用指南
-│   ├── customer-service/            客户服务 SOP
-│   ├── sales/                       销售流程 SOP
-│   ├── marketing/                   市场营销 SOP
-│   ├── product/                     产品运营 SOP
-│   ├── finance/                     财务流程 SOP
-│   ├── hr/                          人事行政 SOP
-│   ├── onboarding/                  新人培训
-│   └── public/
-│       ├── files/                   原始 Word/PDF/Excel 附件
-│       └── assets/                  图片 / 截图
-├── package.json
+├── index.html              目录页
+├── style.css               共享样式
+├── pages/                  各 SOP 页面
+│   └── example-sop.html    示例（可删除或替换）
+├── assets/                 图片 / 截图
+├── files/                  Word / PDF / Excel 下载
+├── README.md               本文件
 └── .gitignore
 ```
 
-## 如何新增或修改 SOP
+## 本地预览
 
-详见站内文档：[使用指南 · 新增或修改 SOP](docs/guide/contributing.md)。
+双击 `index.html` 即可在浏览器打开。不需要启动任何服务器。
+
+## 部署到 GitHub Pages
+
+一次性配置（只需做一次）：
+
+1. 打开仓库设置：<https://github.com/li2918/SOP/settings/pages>
+2. **Build and deployment**：
+   - Source：选 **Deploy from a branch**
+   - Branch：选 `main` / 文件夹选 `/ (root)`
+3. 保存
+
+约 1 分钟后网站即可访问：**<https://li2918.github.io/SOP/>**
+
+之后每次 push 到 `main`，页面自动更新，无需任何 Actions。
+
+## 新增一篇 SOP
+
+### 方式 A：在 GitHub 网页直接操作（最简单）
+
+1. 打开 <https://github.com/li2918/SOP/tree/main/pages>
+2. 点击右上角 **Add file → Create new file**
+3. 文件名写 `my-sop.html`
+4. 把 [`pages/example-sop.html`](pages/example-sop.html) 的内容复制过来，改成您要写的流程
+5. 滑到底部点 **Commit changes**
+6. 打开 [`index.html`](index.html)，点铅笔图标编辑，在对应分类的 `<ul>` 里加一行：
+   ```html
+   <li data-keywords="搜索关键词1 关键词2">
+     <a href="pages/my-sop.html">我的 SOP 标题</a>
+     <span class="desc">— 一句话描述</span>
+   </li>
+   ```
+7. Commit
+
+约 1 分钟后即可看到新 SOP。
+
+### 方式 B：本地编辑 + git push
+
+同样的，只不过在本地编辑器里（VS Code、记事本都行）改，然后：
+
+```bash
+git add .
+git commit -m "新增 SOP：xxx"
+git push
+```
+
+## 页面模板说明
+
+打开 `pages/example-sop.html` 看完整示例。常用结构块：
+
+| 元素 | 用途 |
+| --- | --- |
+| `<h1>` | 标题（每页一个） |
+| `<div class="meta">` | 版本/日期/负责人 灰底信息块 |
+| `<h2>` `<h3>` | 二、三级小标题 |
+| `<ol>` / `<ul>` | 有序 / 无序列表 |
+| `<table>` | 表格（异常处理、角色分工） |
+| `<div class="note tip">` | 蓝色提示 |
+| `<div class="note warning">` | 黄色警告 |
+| `<div class="note danger">` | 红色高危 |
+| `<div class="attachments">` | 附件下载区（灰底） |
+| `<img src="../assets/xxx.png">` | 插入图片 |
+
+> 不会写 HTML？把 Word 原文发给维护者，由他们转成 HTML 页面即可。
+
+## 上传附件 / 图片
+
+- Word / PDF / Excel 放到 `files/` 下，文件名用英文 + 短横线（例：`refund-policy-v3.2.docx`）
+- 图片放到 `assets/` 下（例：`refund-flow.png`）
+- 在 SOP 页面里引用：`<a href="../files/xxx.docx">` 或 `<img src="../assets/xxx.png">`
+
+## 🔒 关于访问密码
+
+**注意：当前是公开站点，任何拿到 URL 的人都能访问。**
+
+给网站加密码有两种方式（不进 CI 的「一次性操作」）：
+
+### 方案 1：把仓库 + 站点都变成私有（推荐）
+
+最直接的做法：
+
+1. 仓库设为 **Private**：`Settings → Danger Zone → Make private`
+2. GitHub Pages 私有站点需要 GitHub Pro（$4/月）或 Team 套餐
+3. 订阅后，Pages 会自动要求浏览者登录 GitHub 且是仓库协作者才能访问
+
+这是运维最省心的方式 — 管理员只用在 GitHub 加/删协作者，不用轮换密码。
+
+### 方案 2：StatiCrypt 给 HTML 加密（免费）
+
+用 <https://robinmoisson.github.io/staticrypt/> 在线加密工具：
+
+1. 打开上面的网址
+2. 选择"Encrypt multiple files"
+3. 上传 `index.html` 和 `pages/` 下所有 HTML
+4. 设置强密码（≥14 位混合字符）
+5. 下载加密后的 HTML，替换仓库里的原文件
+6. commit + push 即可
+
+**限制：** 每次修改 SOP 都得重新加密受影响的页面。长期来看比方案 1 麻烦。
+
+> 如果您确定要走方案 2，告诉我，我可以帮您一次性写个本地批处理脚本简化这个步骤。
 
 ## 常见问题
 
-**Q：忘记密码怎么办？**
-A：在 GitHub Settings → Secrets 把 `STATICRYPT_PASSWORD` 改成新值，然后在 Actions 页手动触发一次 `Deploy VitePress site to GitHub Pages` 工作流即可。
+**Q：网站打开样式全乱 / 链接 404？**
+A：多半是相对路径错了。`index.html` 在根目录引用 `style.css`；`pages/xxx.html` 在子目录引用 `../style.css`（带两个点）。
 
-**Q：老用户勾了"30 天免登录"，轮换密码后他们还能继续看吗？**
-A：不能。新部署后旧的加密 payload 就失效了，所有人都需要输入新密码。这正是我们期望的"离职即失效"机制。
+**Q：搜索框没反应？**
+A：检查浏览器是否禁用了 JavaScript。功能需要 JS，但只是 30 行原生 JS，不依赖任何库。
 
-**Q：StatiCrypt 的安全性够吗？**
-A：对"防竞争对手"这个威胁模型足够，前提是密码足够强（14 位以上混合字符）且仓库 Private。技术细节：
-- HTML 内容用 AES-256-CBC + PBKDF2 (600k 次迭代) 加密
-- 密码从未传到服务器，全部在浏览器端解密
-- 要暴力破解需要离线算 PBKDF2，14 位强密码按 2026 年算力需要数千年
+**Q：想加自定义域名（不用 github.io）？**
+A：在 `Settings → Pages → Custom domain` 填入域名，并在 DNS 服务商把 CNAME 指向 `li2918.github.io`。然后在仓库根目录建 `CNAME` 文件，里面写域名。
 
-**Q：VitePress 的 JS bundle 里有没有内容泄漏？**
-A：StatiCrypt 只加密 HTML。VitePress 的 JS 包里包含页面内容用于客户端路由，理论上直接访问 `/SOP/assets/xxx.js` 能拿到部分文本。**所以仓库必须 Private**——Pages 部署的资源不可直接列目录，攻击者得先猜到具体文件名才行，而文件名带有 hash，不是确定性的。加上仓库 Private 这两层，实际攻击难度非常高。
-
-**Q：上线后 CSS / JS 404？**
-A：大概率是 `base` 字段与 GitHub Pages 的 URL 前缀不匹配。调整 [docs/.vitepress/config.mts](docs/.vitepress/config.mts) 的 `base` 即可。
-
-**Q：不想升级 GitHub 套餐，有没有备选方案？**
-A：有。把仓库保持 Private（免费版支持私有仓库）+ 改为部署到 Vercel / Netlify / Cloudflare Pages，它们都支持把私有仓库部署成公开访问的站点，并且仍可通过 GitHub Actions 触发。如果确定需要，可以追加实现。
+**Q：想要版本历史？**
+A：每次 push 都是 git 提交，Git 会自动记录谁在什么时候改了哪些内容。在 GitHub 仓库页面点任意文件 → **History** 即可查看。
