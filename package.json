@@ -1,0 +1,15 @@
+{
+  "name": "sop-site",
+  "version": "1.0.0",
+  "description": "运营 SOP 知识库 - 内部 SOP 查询与协作平台",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs"
+  },
+  "devDependencies": {
+    "vitepress": "^1.5.0"
+  }
+}
