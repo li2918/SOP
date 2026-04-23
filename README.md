@@ -95,36 +95,42 @@ git push
 - 图片放到 `assets/` 下（例：`refund-flow.png`）
 - 在 SOP 页面里引用：`<a href="../files/xxx.docx">` 或 `<img src="../assets/xxx.png">`
 
-## 🔒 关于访问密码
+## 🔒 访问密码
 
-**注意：当前是公开站点，任何拿到 URL 的人都能访问。**
+本站所有页面均已用 **StatiCrypt** 做 AES-256 端到端加密。访问时浏览器会先弹出密码框，输入正确密码才能看到内容。
 
-给网站加密码有两种方式（不进 CI 的「一次性操作」）：
+- **密码发放：** 内部钉钉/企微群公告（不要写在任何公开位置）
+- **30 天免登录：** 登录时勾选，之后 30 天内自动放行
+- **密码轮换：** 有员工离职 / 每季度，请联系维护者重新加密所有 HTML（见下）
 
-### 方案 1：把仓库 + 站点都变成私有（推荐）
+### 新增或修改 SOP 后的重加密流程
 
-最直接的做法：
+每次修改或新增 HTML 页面后，**必须**重新加密后再 push，否则明文会直接暴露。两种做法：
 
-1. 仓库设为 **Private**：`Settings → Danger Zone → Make private`
-2. GitHub Pages 私有站点需要 GitHub Pro（$4/月）或 Team 套餐
-3. 订阅后，Pages 会自动要求浏览者登录 GitHub 且是仓库协作者才能访问
+**方式 A：网页工具（无需安装）**
+1. 打开 <https://robinmoisson.github.io/staticrypt/>
+2. 选 "Encrypt multiple files" 上传要加密的 `.html`
+3. 输入密码，勾选 "Remember me" 设 30 天
+4. 下载加密文件，替换仓库里的版本
 
-这是运维最省心的方式 — 管理员只用在 GitHub 加/删协作者，不用轮换密码。
+**方式 B：命令行（需本地装过 Node.js）**
+```bash
+npm install -g staticrypt    # 一次性安装
+staticrypt path/to/page.html -p '你的密码' -d $(dirname path/to/page.html) \
+  --short --remember 30 --config false \
+  --template-title "运营 SOP 知识库" \
+  --template-instructions "本站为公司内部文档，请输入访问密码" \
+  --template-button "进入" --template-placeholder "请输入密码" \
+  --template-error "密码错误，请重试" --template-remember "30 天内免登录"
+```
 
-### 方案 2：StatiCrypt 给 HTML 加密（免费）
+### `files/` 和 `assets/` 不受密码保护
 
-用 <https://robinmoisson.github.io/staticrypt/> 在线加密工具：
+⚠️ StatiCrypt 只加密 HTML。放在 `files/` 的 Word/PDF/Excel、`assets/` 的图片只要 URL 暴露就能被直接下载。
 
-1. 打开上面的网址
-2. 选择"Encrypt multiple files"
-3. 上传 `index.html` 和 `pages/` 下所有 HTML
-4. 设置强密码（≥14 位混合字符）
-5. 下载加密后的 HTML，替换仓库里的原文件
-6. commit + push 即可
-
-**限制：** 每次修改 SOP 都得重新加密受影响的页面。长期来看比方案 1 麻烦。
-
-> 如果您确定要走方案 2，告诉我，我可以帮您一次性写个本地批处理脚本简化这个步骤。
+**处理建议：**
+- 敏感原件放企业网盘（飞书、钉钉、OneDrive 等），SOP 页面里只放外链
+- 普通示意图、流程图可以直接放 `assets/`，风险较低
 
 ## 常见问题
 
